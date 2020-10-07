@@ -25,7 +25,7 @@ for tab in weatherall:
     if teams[i] == "New York":
       teams[i] = "N.Y. " + \
           [x.text for x in tab.find_all("span", {"class": "mascot"})][i]
-    if teams[i] == "Los Angelese":
+    if teams[i] == "Los Angeles":
       teams[i] = "L.A. " + \
           [x.text for x in tab.find_all("span", {"class": "mascot"})][i]
   weathertable = [x.text for x in tab.find_all("span", {"class": "display"})]
