@@ -29,11 +29,8 @@ for tab in weatherall:
       teams[i] = "L.A. " + \
           [x.text for x in tab.find_all("span", {"class": "mascot"})][i]
   weathertable = [x.text for x in tab.find_all("span", {"class": "display"})]
-  if weathertable == []:
-    weathertable.append("Dome")
-  else:
-    weathertable = weathertable[1:3] + weathertable[4:]
-  if len(weathertable) > 1:
+  weathertable = weathertable[1:3] + weathertable[4:]
+  if len(weathertable) > 0:
     weatherd[teams[1]] = {
         "Temperature": weathertable[0],
         "Precipitation": weathertable[1],
