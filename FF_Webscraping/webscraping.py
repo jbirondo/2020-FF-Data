@@ -21,6 +21,13 @@ weatherall = weathersoup.find_all("div", {"class": "crd"})
 weatherd = {}
 for tab in weatherall:
   teams = [x.text for x in tab.find_all("span", {"class": "lng"})]
+  for i in range(0, 2):
+    if teams[i] == "New York":
+      teams[i] = "N.Y. " + \
+          [x.text for x in tab.find_all("span", {"class": "mascot"})][i]
+    if teams[i] == "Los Angelese":
+      teams[i] = "L.A. " + \
+          [x.text for x in tab.find_all("span", {"class": "mascot"})][i]
   weathertable = [x.text for x in tab.find_all("span", {"class": "display"})]
   if weathertable == []:
     weathertable.append("Dome")
@@ -46,7 +53,7 @@ table = all[0].find_all("tr")
 
 l = []
 
-for a in table:
+for a in table[:15]:
   d = {}
   teams = a.find_all("b")
   odds = a.find_all("td", {"class": "oddsCell"})
@@ -58,11 +65,11 @@ for a in table:
   ol1 = [x.replace(u"\xa0", " ") for x in ol[1:]]
   ol2 = [x.replace(u"\n\t\t\t\t\t\t\t", "") for x in ol1]
   for x in range(0, 2):
-    if x == 0 and ol2[x][0] != "-":
+    if x == 0 and ol2[x][0] is not "-":
       d["Over/Under"] = ol2[x]
       d["Favorite"] = teams[1].text
       d["Underdog"] = teams[0].text
-    if x == 1 and ol2[x][0] != "-":
+    if x == 1 and ol2[x][0] is not "-":
       d["Over/Under"] = ol2[x]
       d["Favorite"] = teams[0].text
       d["Underdog"] = teams[1].text
@@ -70,8 +77,10 @@ for a in table:
   d["Away"] = teams[0].text
   d["Home"] = teams[1].text
   d["Date/Time"] = a.find("span", {"class": "cellTextHot"}).text
-  # d["Temperature"] = weatherd[d["Home"]]["Temperature"]
-  # d["Wind"] = weatherd[d["Home"]]["Wind"]
+  d["Temperature"] = weatherd[teams[1].text]["Temperature"]
+  d["Precipitation"] = weatherd[teams[1].text]["Precipitation"]
+  d["Wind Direction"] = weatherd[teams[1].text]["Wind Direction"]
+  d["Wind Speed"] = weatherd[teams[1].text]["Wind Speed"]
   l.append(d)
 
 sortedArray = sorted(
@@ -83,5 +92,5 @@ sortedArray = sorted(
 df = pandas.DataFrame(sortedArray)
 
 fd = pandas.DataFrame(weatherd)
-print(df)
-# fd
+with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
+    print(df)
