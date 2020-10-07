@@ -58,11 +58,11 @@ for a in table:
   ol1 = [x.replace(u"\xa0", " ") for x in ol[1:]]
   ol2 = [x.replace(u"\n\t\t\t\t\t\t\t", "") for x in ol1]
   for x in range(0, 2):
-    if x == 0 and ol2[x][0] is not "-":
+    if x == 0 and ol2[x][0] != "-":
       d["Over/Under"] = ol2[x]
       d["Favorite"] = teams[1].text
       d["Underdog"] = teams[0].text
-    if x == 1 and ol2[x][0] is not "-":
+    if x == 1 and ol2[x][0] != "-":
       d["Over/Under"] = ol2[x]
       d["Favorite"] = teams[0].text
       d["Underdog"] = teams[1].text
@@ -83,5 +83,5 @@ sortedArray = sorted(
 df = pandas.DataFrame(sortedArray)
 
 fd = pandas.DataFrame(weatherd)
-df
+print(df)
 # fd
