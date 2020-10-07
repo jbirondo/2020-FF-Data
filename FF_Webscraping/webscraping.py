@@ -92,9 +92,6 @@ sortedArray = sorted(
 df = pandas.DataFrame(sortedArray)
 
 fd = pandas.DataFrame(weatherd)
-# with pandas.option_context('display.max_rows', None, 'display.max_columns', None):
-#     print(df)
-# df
 
 injr = requests.get("https://www.cbssports.com/nfl/injuries/", headers={
     'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
@@ -103,16 +100,16 @@ injsoup = BeautifulSoup(injc, "html.parser")
 
 injall = injsoup.find_all("div", {"class": "TableBaseWrapper"})
 
-# print(injall[0].find("span", {"class": "TeamName"}).text) # "Key" Team name
-player = [x.text.strip() for x in injall[0].find_all(
-    "tr", {"class": "TableBase-bodyTr"})][0].split()
-print(player)
-print(" ".join(player[2:4]))  # "Player": playername
-print(" ".join(player[4]))  # "Position": position
-print(" ".join(player[5:8]))  # Date of Injury: %D/%m/%d
-print(" ".join(player[9:]))  # Summary: summary of injury
-
-
 injd = {}
 
-# for x in injall[0]:
+for team in injall:
+  teamname = team.find("span", {"class": "TeamName"}).text.strip()
+  injd[teamname] = []
+  for player in [x.text.strip() for x in team.find_all("tr", {"class": "TableBase-bodyTr"})]:
+    player = player.split()
+    p = {}
+    p["Name"] = " ".join(player[2:4])
+    p["Position"] = " ".join(player[4])
+    p["Date of Injury"] = " ".join(player[5:8])
+    p["Summary"] = " ".join(player[9:])
+    injd[teamname].append(p)
