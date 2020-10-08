@@ -102,14 +102,21 @@ injall = injsoup.find_all("div", {"class": "TableBaseWrapper"})
 
 injd = {}
 
+days = ["Sun,", "Mon,", "Tue,", "Wed,", "Thu,", "Fri,", "Sat,"]
+
 for team in injall:
   teamname = team.find("span", {"class": "TeamName"}).text.strip()
   injd[teamname] = []
-  for player in [x.text.strip() for x in team.find_all("tr", {"class": "TableBase-bodyTr"})]:
-    player = player.split()
+  for player in team.find_all("tr", {"class": "TableBase-bodyTr"}):
     p = {}
-    p["Name"] = " ".join(player[2:4])
-    p["Position"] = " ".join(player[4])
-    p["Date of Injury"] = " ".join(player[5:8])
-    p["Summary"] = " ".join(player[9:])
+    day = [a for a in player.text.strip().replace(
+        "\n", "").split() if a in days]
+    i = player.text.strip().replace("\n", "").split().index(day[0]) - 1
+    arr = player.text.strip().replace("\n", "").split()[i:]
+    p["Name"] = player.find(
+        "span", {"class": "CellPlayerName--long"}).text.replace("\n", "")
+    p["Position"] = arr[0]
+    p["Date of Injury"] = " ".join(arr[1:4])
+    p["Injury"] = arr[4]
+    p["Injury Summary"] = " ".join(arr[5:])
     injd[teamname].append(p)
