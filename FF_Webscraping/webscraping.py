@@ -50,7 +50,6 @@ for tab in weatherall:
 
 table = all[0].find_all("tr")
 
-
 l = []
 
 for a in table[:len(weatherd)]:
@@ -120,3 +119,5 @@ for team in injall:
     p["Injury"] = arr[4]
     p["Injury Summary"] = " ".join(arr[5:])
     injd[teamname].append(p)
+  injd[teamname] = sorted(injd[teamname], key=lambda x: datetime.strptime(
+      x['Date of Injury'], '%a, %b %d'), reverse=True)
